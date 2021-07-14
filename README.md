@@ -28,7 +28,7 @@ DMARC Ingestion and Dashboards for SumoLogic
 4) In O365 RUA Email box create a rule to move new dmarc reports to the "rua" folder.
 - This is to prevent spam from being processed from the root directory.  
 - This is also where you can choose not to process from certain senders like LinkedIn autoreply failures
-5) Configure SumoLogic Collector to collect from '/app/dat/dmarc/siem/'
+5) Configure SumoLogic Collector to collect from '/app/dat/dmarc/siem/' (or whatever you set "ds" equal to getDMARC.py)
 
 
 # Dashboards
