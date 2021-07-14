@@ -30,5 +30,5 @@ DMARC Ingestion and Dashboards for SumoLogic
 
 # Dashboards
 1) Change "\<srccat\>" to whatever source category you use
-2) then change "<domain>" to your domains
+2) then change "\<domain\>" to your domains
 2) Import into SumoLogic
