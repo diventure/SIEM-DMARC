@@ -22,7 +22,7 @@ d = '/app/dat/dmarc/zipped'
 de = '/app/dat/dmarc/extracted/'
 da = '/app/dat/dmarc/archive/'
 dp = '/app/dat/dmarc/parsed/'
-ds = '/app/dat/dmarc/sumo/'
+ds = '/app/dat/dmarc/siem/'
 
 for item in (account.inbox / 'rua').all().order_by('-datetime_received')[:100]:
 	for attachment in item.attachments:
