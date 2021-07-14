@@ -10,7 +10,7 @@ DMARC Ingestion and Dashboards for SumoLogic
 - Create dmarc-rua email box like dmarc-rua@company.tld and dmarc-ruf@company.tld
 - Must configure DNS to send RUA to an exchange email box
 - - https://dmarc.org/overview/
-- - - "v=DMARC1;p=reject;pct=100;rua=mailto:dmarc-rua@company.tld"
+- - - "v=DMARC1;p=none;pct=100;rua=mailto:dmarc-rua@company.tld"
 - - Don't forget External Destination Verification if needed for multiple domains
 - - - https://dmarcian.com/what-is-external-destination-verification/
 - Uses Exchangelib to download RUA emails
