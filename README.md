@@ -1,5 +1,5 @@
-# SumoLogic-DMARC
-DMARC Ingestion and Dashboards for SumoLogic 
+# SIEM-DMARC
+DMARC SIEM Ingestion and Dashboards for SumoLogic 
 
 # Requirements
 - Python 3.x
