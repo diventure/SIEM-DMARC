@@ -9,15 +9,16 @@ DMARC Ingestion and Dashboards for SumoLogic
 # Notes
 - Create dmarc-rua email box like dmarc-rua@company.tld and dmarc-ruf@company.tld
 - Must configure DNS to send RUA to an exchange email box
-- - https://dmarc.org/overview/
-- - - "v=DMARC1;p=none;pct=100;rua=mailto:dmarc-rua@company.tld"
-- - Don't forget External Destination Verification if needed for multiple domains
-- - - https://dmarcian.com/what-is-external-destination-verification/
+ - https://dmarc.org/overview/
+  - "v=DMARC1;p=none;pct=100;rua=mailto:dmarc-rua@company.tld"
+ - Don't forget External Destination Verification if needed for multiple domains
+  - https://dmarcian.com/what-is-external-destination-verification/
 - Uses Exchangelib to download RUA emails
 - Python script uses a series of folders to extract, parse, and import data from Exchange to SumoLogic
 - This is designed to be on a server dedicated for SumoLogic Ingest Processing
-- - All SumoLogic Apps are designed to be run from /app base folder
-- - Please modify configurations and folder structure to fit your needs
+  - All SumoLogic Apps are designed to be run from /app base folder
+  - Please modify configurations and folder structure to fit your needs
+- This script can be used to ingest to any SIEM, but this use case is for SumoLogic
 
 
 # Configuration
