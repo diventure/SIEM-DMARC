@@ -41,29 +41,37 @@ for item in (account.inbox / 'rua').all().order_by('-datetime_received')[:100]:
 #remove zip files over 1mb to limit damage from oversized attachments being sent to public mailbox
 max_attachment_size = 1000000 #1mb
 for dirName, subdirList, fileList in os.walk(d):
-    for fname in fileList:
-        if os.path.getsize(d+'/'+fname) > max_attachment_size:
-            os.remove(d+'/'+fname)
+	for fname in fileList:
+		if os.path.getsize(d+'/'+fname) > max_attachment_size:
+			os.remove(d+'/'+fname)
 
 			
 #cleanup folders to prevent sumo from ingesting twice
 for dirName, subdirList, fileList in os.walk(de):
-    for fname in fileList:
-        if os.path.exists(de+'/'+fname):
-            os.remove(de+'/'+fname)
+	for fname in fileList:
+		if os.path.exists(de+'/'+fname):
+			os.remove(de+'/'+fname)
 
 for dirName, subdirList, fileList in os.walk(dp):
-    for fname in fileList:
-		os.remove(dp+'/'+fname)
+	for fname in fileList:
+		if os.path.exists(dp+'/'+fname):
+			os.remove(dp+'/'+fname)
 
 for dirName, subdirList, fileList in os.walk(ds):
-    for fname in fileList:
-		os.remove(ds+'/'+fname)
-		
+	for fname in fileList:
+		if os.path.exists(ds+'/'+fname):
+			os.remove(ds+'/'+fname)
+
+#Comment this out if you want to keep the archived zip files
+#I leave this removed because email box keeps archival for me.
+for dirName, subdirList, fileList in os.walk(da):
+	for fname in fileList:
+		if os.path.exists(da+'/'+fname):
+			os.remove(da+'/'+fname)	
 		
 #File processing to unzip and archive files			
 for dirName, subdirList, fileList in os.walk(d):
-    for fname in fileList:
+	for fname in fileList:
 		print(d+'/'+fname)
 		if(fname.endswith('.zip')):
 			with zipfile.ZipFile(d+'/'+fname, 'r') as zip_ref:
@@ -72,9 +80,33 @@ for dirName, subdirList, fileList in os.walk(d):
 		if(fname.endswith('.gz')):
 			with gzip.open(d+'/'+fname, 'rb') as f_in:
 				with open(de+fname.replace(".gz",""), 'wb') as f_out:
-					shutil.copyfileobj(f_in, f_out)
-					os.rename(d+'/'+fname,da+fname+'.gz')
+					try:
+						shutil.copyfileobj(f_in, f_out)
+						os.rename(d+'/'+fname,da+fname+'.gz')
+					except:
+						if os.path.exists(d+'/'+fname):
+							os.remove(d+'/'+fname)
+						if os.path.exists(de+'/'+fname):
+							os.remove(de+'/'+fname)
+						if os.path.exists(dp+'/'+fname):
+							os.remove(dp+'/'+fname)
+						if os.path.exists(da+'/'+fname):
+							os.remove(da+'/'+fname)
+						
+					
 
+#Look for subdirectories with xml files that need processing
+for dirName, subdirList, fileList in os.walk(de):
+    for subdir in subdirList:
+        if os.path.isdir(dirName):
+            sd = (dirName+'/'+subdir).replace('//','/')
+            # print(sd)
+            for fn in os.listdir(sd):
+                if(os.path.isfile(sd+'/'+fn)):
+                    # print(sd+'/'+fn)
+                    shutil.move(sd+'/'+fn,de+'/'+fn)
+
+		
 #parsing to remove whitespace and newlines
 for dirName, subdirList, fileList in os.walk(de):
 	for fname in fileList:
@@ -109,10 +141,20 @@ for dirName, subdirList, fileList in os.walk(dp):
 			xml_header = ''
 		
 		dmarc_pub_policy_re = re.compile("(<policy_published>.*?<\/policy_published>)")
-		dmarc_pub_policy = dmarc_pub_policy_re.search(data).group(1)
+		if(dmarc_pub_policy_re.search(data)):
+			dmarc_pub_policy = dmarc_pub_policy_re.search(data).group(1)
+		else:
+			dmarc_pub_policy = ''
+			
 		sumo_data = data.replace(xml_header,'').replace(dmarc_pub_policy,'').replace(rec_meta,'').replace('<record>', xml_header+'<record>'+rec_meta+dmarc_pub_policy).replace('</record>','</record>\n').replace('<feedback>','').replace('</feedback>','').replace(dmarc_version,'')
 		#remove initial xml header, report_meta, and policy_published
 		f = open(ds+fname, 'w')
 		f.write(sumo_data)
 		f.close()
 		#os.remove(dp+fname)
+
+# Clean Up Zipped Directory
+for dirName, subdirList, fileList in os.walk(d):
+	for fname in fileList:
+		if os.path.exists(d+'/'+fname):
+			os.remove(d+'/'+fname)
